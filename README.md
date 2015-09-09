@@ -1,6 +1,6 @@
 Yii2 Instagram Widget
 =====================
-Show photos from Instagram on your site
+Yii2 Instagram Widget allows you to show your Instagram Photos on your Website
 
 Installation
 ------------
