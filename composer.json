@@ -1,0 +1,21 @@
+{
+    "name": "kmarenov/yii2-instagram-widget",
+    "description": "Show photos from Instagram on your site",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","instagram","widget"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kirill Marenov",
+            "email": "kmarenov@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "kmarenov\\instagram\\": ""
+        }
+    }
+}
