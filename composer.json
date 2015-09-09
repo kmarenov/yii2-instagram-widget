@@ -1,6 +1,6 @@
 {
     "name": "kmarenov/yii2-instagram-widget",
-    "description": "Show photos from Instagram on your site",
+    "description": "Allows you to show your Instagram Photos on your Website",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","instagram","widget"],
     "license": "BSD-3-Clause",
