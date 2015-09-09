@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist kmarenov/yii2-instagram-widget "*"
+php composer.phar require --prefer-dist kmarenov/yii2-instagram-widget "dev-master@dev"
 ```
 
 or add
 
 ```
-"kmarenov/yii2-instagram-widget": "*"
+"kmarenov/yii2-instagram-widget": "dev-master@dev"
 ```
 
 to the require section of your `composer.json` file.
