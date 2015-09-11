@@ -28,4 +28,9 @@ Usage
 Once the extension is installed, simply use it in your code by  :
 
 ```php
-<?= \kmarenov\instagram\InstagramWidget::widget(); ?>```
+<?= \kmarenov\instagram\InstagramWidget::widget([
+        'clientId' => '<your-instagram-client-id>',
+        'userName' => 'shnurovs'
+    ]);
+?>
+```
