@@ -8,14 +8,10 @@ class InstagramWidget extends \yii\base\Widget
 {
     public $clientId;
     public $userName;
-    public $media;
-    public $user;
     public $tag;
     public $showBy = 'user';
     public $isCacheEnabled = true;
     public $cacheTime = 3600;
-    public $instagram;
-    public $error_message;
 
     public $width = 260;
     public $imgWidth = 0;
@@ -24,6 +20,7 @@ class InstagramWidget extends \yii\base\Widget
     public $count = 12;
     public $imgRes = 'thumbnail';
 
+    private $instagram;
 
     public function run()
     {
@@ -33,26 +30,40 @@ class InstagramWidget extends \yii\base\Widget
             $this->imgWidth = round(($this->width - (17 + (9 * $this->inline))) / $this->inline);
         }
 
+        if (!empty($this->tag)) {
+            $this->showBy = 'tag';
+        }
+
         if ($this->showBy == 'tag') {
             $this->isShowToolbar = false;
         }
 
         $this->instagram = new Instagram($this->clientId);
 
+        $user = false;
         if ($this->showBy == 'user') {
-            $this->user = $this->findUser();
-            $this->media = $this->findMediaByUser();
+            $user = $this->findUser($this->userName);
+            $media = $this->findMediaByUser($user, $this->count);
         } elseif ($this->showBy == 'tag') {
-            $this->media = $this > findMediaByTag();
+            $media = $this->findMediaByTag($this->tag, $this->count);
         }
 
-        return $this->render('default', ['widget' => $this]);
+        return $this->render('default',
+            [
+                'user' => $user,
+                'media' => $media,
+                'userName' => $this->userName,
+                'width' => $this->width,
+                'imgWidth' => $this->imgWidth,
+                'inline' => $this->inline,
+                'isShowToolbar' => $this->isShowToolbar,
+                'imgRes' => $this->imgRes
+            ]
+        );
     }
 
-    public function findUser()
+    public function findUser($userName)
     {
-        $userName = $this->userName;
-
         if (empty($userName)) {
             return array();
         }
@@ -93,20 +104,20 @@ class InstagramWidget extends \yii\base\Widget
         return $user['data'];
     }
 
-    public function findMediaByUser()
+    public function findMediaByUser($user, $count)
     {
-        $key = 'kmarenov_instagram_find_media_by_user_' . $this->userName . '_' . $this->count;
+        if (empty($user)) {
+            return array();
+        }
+
+        $key = 'kmarenov_instagram_find_media_by_user_' . $this->userName . '_' . $count;
 
         if ($this->isCacheEnabled) {
             $media = \Yii::$app->cache->get($key);
         }
 
         if ($media === false || !$this->isCacheEnabled) {
-            $user = $this->findUser();
-
-            if (!empty($user)) {
-                $media = json_decode(json_encode($this->instagram->getUserMedia($user['id'], $this->count)), true);
-            }
+            $media = json_decode(json_encode($this->instagram->getUserMedia($user['id'], $count)), true);
 
             if ($this->isCacheEnabled) {
                 \Yii::$app->cache->set($key, $media, $this->cacheTime);
@@ -121,9 +132,9 @@ class InstagramWidget extends \yii\base\Widget
         return $media;
     }
 
-    public function findMediaByTag()
+    public function findMediaByTag($tag, $count)
     {
-        $key = 'kmarenov_instagram_find_media_by_tag_' . $this->tag . '_' . $this->count;
+        $key = 'kmarenov_instagram_find_media_by_tag_' . $tag . '_' . $count;
 
         if ($this->isCacheEnabled) {
             $media = \Yii::$app->cache->get($key);
@@ -131,7 +142,7 @@ class InstagramWidget extends \yii\base\Widget
 
         if ($media === false || !$this->isCacheEnabled) {
             if (!empty($this->tag)) {
-                $media = json_decode(json_encode($this->instagram->getTagMedia($this->tag, $this->count)), true);
+                $media = json_decode(json_encode($this->instagram->getTagMedia($tag, $count)), true);
             }
 
             if ($this->isCacheEnabled) {
