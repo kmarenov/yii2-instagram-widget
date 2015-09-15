@@ -43,6 +43,7 @@ class InstagramWidget extends \yii\base\Widget
         $user = false;
         if ($this->showBy == 'user') {
             $user = $this->findUser($this->userName);
+            $user = json_decode(json_encode($user), true);
             $media = $this->findMediaByUser($user, $this->count);
         } elseif ($this->showBy == 'tag') {
             $media = $this->findMediaByTag($this->tag, $this->count);
@@ -75,15 +76,15 @@ class InstagramWidget extends \yii\base\Widget
         }
 
         if ($user === false || !$this->isCacheEnabled) {
-            $users = json_decode(json_encode($this->instagram->searchUser($userName, 1)), true);
+            $users = $this->instagram->searchUser($userName, 1);
 
-            if (!empty($users['meta']['error_message'])) {
-                $this->error_message = $users['meta']['error_message'];
+            if (!empty($users->meta->error_message)) {
+                throw new \Exception($users->meta->error_message);
             } else {
-                $user_id = $users['data'][0]["id"];
+                $user_id = $users->data[0]->id;
 
                 if (!empty($user_id)) {
-                    $user = json_decode(json_encode($this->instagram->getUser($user_id)), true);
+                    $user = $this->instagram->getUser($user_id);
                 }
             }
 
@@ -92,16 +93,15 @@ class InstagramWidget extends \yii\base\Widget
             }
         }
 
-        if (!empty($user['meta']['error_message'])) {
-            $this->error_message = $user['meta']['error_message'];
-            return array();
+        if (!empty($user->meta->error_message)) {
+            throw new \Exception($user->meta->error_message);
         }
 
-        if (empty($user['data'])) {
-            return array();
+        if (empty($user->data)) {
+            throw new \Exception('User not found');
         }
 
-        return $user['data'];
+        return $user->data;
     }
 
     public function findMediaByUser($user, $count)
@@ -117,16 +117,15 @@ class InstagramWidget extends \yii\base\Widget
         }
 
         if ($media === false || !$this->isCacheEnabled) {
-            $media = json_decode(json_encode($this->instagram->getUserMedia($user['id'], $count)), true);
+            $media = $this->instagram->getUserMedia($user['id'], $count);
 
             if ($this->isCacheEnabled) {
                 \Yii::$app->cache->set($key, $media, $this->cacheTime);
             }
         }
 
-        if (!empty($media['meta']['error_message'])) {
-            $this->error_message = $media['meta']['error_message'];
-            return array();
+        if (!empty($media->meta->error_message)) {
+            throw new \Exception($media->meta->error_message);
         }
 
         return $media;
@@ -142,7 +141,7 @@ class InstagramWidget extends \yii\base\Widget
 
         if ($media === false || !$this->isCacheEnabled) {
             if (!empty($this->tag)) {
-                $media = json_decode(json_encode($this->instagram->getTagMedia($tag, $count)), true);
+                $media = $this->instagram->getTagMedia($tag, $count);
             }
 
             if ($this->isCacheEnabled) {
@@ -150,9 +149,8 @@ class InstagramWidget extends \yii\base\Widget
             }
         }
 
-        if (!empty($media['meta']['error_message'])) {
-            $this->error_message = $media['meta']['error_message'];
-            return array();
+        if (!empty($media->meta->error_message)) {
+            throw new \Exception($media->meta->error_message);
         }
 
         return $media;
