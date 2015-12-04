@@ -3,7 +3,7 @@
     "description": "Allows you to show your Instagram Photos on your Website",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","instagram","widget"],
-    "license": "BSD-3-Clause",
+    "license": "GPL-2.0+",
     "authors": [
         {
             "name": "Kirill Marenov",
