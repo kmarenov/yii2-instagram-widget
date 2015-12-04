@@ -3,6 +3,7 @@
 namespace kmarenov\instagram;
 
 use MetzWeb\Instagram\Instagram;
+use Yii;
 
 class InstagramWidget extends \yii\base\Widget
 {
@@ -21,6 +22,26 @@ class InstagramWidget extends \yii\base\Widget
     public $imgRes = 'thumbnail';
 
     private $instagram;
+
+
+    public function init()
+    {
+        parent::init();
+        $this->registerTranslations();
+    }
+
+    public function registerTranslations()
+    {
+        $i18n = Yii::$app->i18n;
+        $i18n->translations['kmarenov/instagram/*'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'sourceLanguage' => 'en',
+            'basePath' => '@kmarenov/instagram/messages',
+            'fileMap' => [
+                'kmarenov/instagram/messages' => 'widget.php',
+            ],
+        ];
+    }
 
     public function run()
     {
@@ -58,7 +79,14 @@ class InstagramWidget extends \yii\base\Widget
                 'imgWidth' => $this->imgWidth,
                 'inline' => $this->inline,
                 'isShowToolbar' => $this->isShowToolbar,
-                'imgRes' => $this->imgRes
+                'imgRes' => $this->imgRes,
+
+                'title' => InstagramWidget::t('messages', 'title'),
+                'buttonFollow' => InstagramWidget::t('messages', 'buttonFollow'),
+                'statPosts' => InstagramWidget::t('messages', 'statPosts'),
+                'statFollowers' => InstagramWidget::t('messages', 'statFollowers'),
+                'statFollowing' => InstagramWidget::t('messages', 'statFollowing'),
+                'imgEmpty' => InstagramWidget::t('messages', 'imgEmpty'),
             ]
         );
     }
@@ -154,5 +182,10 @@ class InstagramWidget extends \yii\base\Widget
         }
 
         return $media;
+    }
+
+    public static function t($category, $message, $params = [], $language = null)
+    {
+        return Yii::t('kmarenov/instagram/' . $category, $message, $params, $language);
     }
 }
