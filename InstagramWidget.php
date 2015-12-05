@@ -64,7 +64,6 @@ class InstagramWidget extends \yii\base\Widget
         $user = false;
         if ($this->showBy == 'user') {
             $user = $this->findUser($this->userName);
-            $user = json_decode(json_encode($user), true);
             $media = $this->findMediaByUser($user, $this->count);
         } elseif ($this->showBy == 'tag') {
             $media = $this->findMediaByTag($this->tag, $this->count);
@@ -94,7 +93,8 @@ class InstagramWidget extends \yii\base\Widget
     public function findUser($userName)
     {
         if (empty($userName)) {
-            return array();
+            throw new \Exception('Empty \'userName\' argument');
+            return false;
         }
 
         $key = 'kmarenov_instagram_find_user_' . $userName;
@@ -135,7 +135,8 @@ class InstagramWidget extends \yii\base\Widget
     public function findMediaByUser($user, $count)
     {
         if (empty($user)) {
-            return array();
+            throw new \Exception('Empty \'user\' argument');
+            return false;
         }
 
         $key = 'kmarenov_instagram_find_media_by_user_' . $this->userName . '_' . $count;
@@ -145,7 +146,7 @@ class InstagramWidget extends \yii\base\Widget
         }
 
         if ($media === false || !$this->isCacheEnabled) {
-            $media = $this->instagram->getUserMedia($user['id'], $count);
+            $media = $this->instagram->getUserMedia($user->id, $count);
 
             if ($this->isCacheEnabled) {
                 \Yii::$app->cache->set($key, $media, $this->cacheTime);

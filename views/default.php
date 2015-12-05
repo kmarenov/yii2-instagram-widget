@@ -17,18 +17,18 @@
         <table class="profile">
             <tr>
                 <td rowspan="2" class="avatar">
-                    <a href="http://instagram.com/' . $userName . '" target="_blank"><img src="' . $user["profile_picture"] . '"></a>
+                    <a href="http://instagram.com/' . $userName . '" target="_blank"><img src="' . $user->profile_picture . '"></a>
                 </td>
                 <td class="value">
-                    ' . $user["counts"]["media"] . '
+                    ' . $user->counts->media . '
                     <span>' . $statPosts . '</span>
                 </td>
                 <td class="value">
-                    ' . $user["counts"]["followed_by"] . '
+                    ' . $user->counts->followed_by . '
                     <span>' . $statFollowers . '</span>
                 </td>
                 <td class="value" style="border-right:none !important;">
-                    ' . $user["counts"]["follows"] . '
+                    ' . $user->counts->follows . '
                     <span>' . $statFollowing . '</span>
                 </td>
             </tr>
