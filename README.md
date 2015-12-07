@@ -79,7 +79,7 @@ Widget Options
 * `count` : Total count of showed images (default: 12)
 * `imgRes` : (`low_resolution` - 320x320, `thumbnail` - 150x150, `standard_resolution` - 640x640) Resolution of images (default: thumbnail)
 
-**Warning: Because the Instagram API has a limit of requests count for a day, enable caching is strongly recommended!** 
+**Warning: Because the Instagram API has a limit of requests count for a day, then enable caching is strongly recommended!** 
 
 
 Examples
